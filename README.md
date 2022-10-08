@@ -18,3 +18,6 @@ You add Facebook groups by pasting them into the file called 'groups.list', if y
 
 ### How to Edit Post Message:
 To edit your post message, type what you want to post into the file 'postText.txt'. Spaces, special chars, newlines are all okay, write the message as your normally would on Facebook.
+
+### How to Launch Program:
+Make sure 'groups.list', 'postText.txt', and 'chromedriver.exe' are all in the same dir as 'MFGP.py'. To launch the program, just double click 'MFGP.py' or use the command `python MFGP.py` in terminal.
