@@ -16,4 +16,5 @@ The passwordText variable is located on line 46, and you must input your passwor
 ### How to Add Groups:
 You add Facebook groups by pasting them into the file called 'groups.list', if your computer asks what to open the file with, choose notepad.exe, as the file is just a text file.
 
-### How to launch
+### How to Edit Post Message:
+To edit your post message, type what you want to post into the file 'postText.txt'. Spaces, special chars, newlines are all okay, write the message as your normally would on Facebook.
