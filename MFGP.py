@@ -1,6 +1,33 @@
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 import time
+import os
+
+
+def checkFilesExist():
+    fileMissing = False
+
+    if not os.path.isfile("postText.txt"):
+        print("ERROR! File Missing: postText.txt")
+        fileMissing = True
+
+    if not os.path.isfile("groups.list"):
+        print("ERROR! File Missing: groups.list")
+        fileMissing = True
+    
+    if not os.path.isfile("chromedriver.exe"):
+        print("ERROR! File Missing: chromedriver.exe")
+        fileMissing = True
+
+    if fileMissing:
+        print()
+        print("Please make sure 'groups.list', 'postText.txt', and 'chromedriver.exe' are all in the same dir as 'MFGP.py'. ")
+        print()
+        input("Press ENTER to Exit...")
+
+        exit()
+
+    return
 
 
 def getGroups():
@@ -78,6 +105,7 @@ def sendToGroups():
 
 
 if __name__ == "__main__":
+    checkFilesExist()
     sendToGroups()
     time.sleep(1)
     exit()
