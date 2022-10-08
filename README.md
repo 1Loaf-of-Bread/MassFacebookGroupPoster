@@ -7,6 +7,8 @@ This program will run in the open background, allowing you to do anything while 
 ## How to use
 
 ### Before Launching Program:
+Make sure you use the command "pip install -r requirements.txt" in terminal first.
+
 Before launching the program, you must change the emailText and passwordText values in the program, to allow the program to login on the Facebook website with your email and password.
 
 The emailText variable is located on line 45, and you must input your email inbetween the double quotation marks.
