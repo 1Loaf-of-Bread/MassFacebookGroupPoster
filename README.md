@@ -4,6 +4,6 @@ Mass Facebook group poster is a program that will post any message you want to a
 
 This program will run in the open background, allowing you to do anything while the program is running.
 
-### ~~~ How to use ~~~
+## ~~~ How to use ~~~
 
-##### How to add groups:
+### How to add groups:
