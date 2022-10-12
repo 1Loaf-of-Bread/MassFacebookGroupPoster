@@ -1,3 +1,4 @@
+from selenium.common.exceptions import NoSuchElementException 
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 import time
@@ -97,7 +98,17 @@ def sendToGroups():
 
         time.sleep(4)
 
-        browser.find_element(By.XPATH, "//*[contains(text(), 'Post')]").click()
+        postAnonExist = True
+
+        try:
+            browser.find_element(By.XPATH, "//span[contains(text(), 'Post anonymously')]")
+        except NoSuchElementException:
+            postAnonExist = False
+
+        if postAnonExist:
+            browser.find_elements(By.XPATH, "//span[contains(text(), 'Post')]")[1].click()
+        else:
+            browser.find_element(By.XPATH, "//span[contains(text(), 'Post')]").click()
 
         time.sleep(8)
     
