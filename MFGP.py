@@ -70,8 +70,8 @@ def sendToGroups():
     browser.implicitly_wait(5)
     browser.maximize_window()
 
-    emailText = "email"
-    passwordText = "password"
+    emailText = "dubiensean@gmail.com"
+    passwordText = "Shared001"
 
     time.sleep(2)
 
@@ -98,17 +98,7 @@ def sendToGroups():
 
         time.sleep(4)
 
-        postAnonExist = True
-
-        try:
-            browser.find_element(By.XPATH, "//span[contains(text(), 'Post anonymously')]")
-        except NoSuchElementException:
-            postAnonExist = False
-
-        if postAnonExist:
-            browser.find_elements(By.XPATH, "//span[contains(text(), 'Post')]")[1].click()
-        else:
-            browser.find_element(By.XPATH, "//span[contains(text(), 'Post')]").click()
+        browser.find_element(By.XPATH, "//span[text()='Post']").click()
 
         time.sleep(8)
     
