@@ -70,8 +70,8 @@ def sendToGroups():
     browser.implicitly_wait(5)
     browser.maximize_window()
 
-    emailText = "dubiensean@gmail.com"
-    passwordText = "Shared001"
+    emailText = "email"
+    passwordText = "password"
 
     time.sleep(2)
 
