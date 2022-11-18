@@ -1,4 +1,3 @@
-from selenium.common.exceptions import NoSuchElementException 
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 import time
@@ -47,7 +46,7 @@ def getGroups():
 def getPost():
     post = ""
 
-    with open('postText.txt') as file:
+    with open('postText.txt', 'r') as file:
         postLines = file.readlines()
         file.close()
 
@@ -85,22 +84,31 @@ def sendToGroups():
     time.sleep(7)
 
     for group in groups:
-        browser.get(group)
+        try:
+            browser.get(group)
 
-        time.sleep(3)
+            time.sleep(3)
 
-        browser.find_element(By.XPATH, "//*[contains(text(), 'Write something...')]").click()
+            browser.find_element(By.XPATH, "//*[contains(text(), 'Write something...')]").click()
 
-        time.sleep(2)
+            time.sleep(2)
 
-        writePost = browser.find_element(By.CLASS_NAME, "_5rpu")
-        writePost.send_keys(post)
+            writePost = browser.find_element(By.CLASS_NAME, "_5rpu")
+            writePost.send_keys(post)
 
-        time.sleep(4)
+            time.sleep(4)
 
-        browser.find_element(By.XPATH, "//span[text()='Post']").click()
+            browser.find_element(By.XPATH, "//span[text()='Post']").click()
 
-        time.sleep(8)
+            time.sleep(8)
+        except Exception as e:
+            with open("Error Logs.log", "a") as file:
+                file.write(f"There was an error posting to group '{group}', the error has been pasted below.\n")
+                file.write(f"{str(e)}\n\n")
+
+                file.close()
+
+            pass
     
     browser.close()
 
