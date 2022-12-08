@@ -68,7 +68,7 @@ def sendToGroups():
     browser.get('https://www.facebook.com/')
     browser.implicitly_wait(5)
     browser.maximize_window()
-
+    
     emailText = "email"
     passwordText = "password"
 
@@ -84,6 +84,11 @@ def sendToGroups():
     time.sleep(7)
 
     for group in groups:
+        groupName = group[32:-1]
+
+        if groupName[-1] == "/":
+            groupName = groupName[0:-1]
+
         try:
             browser.get(group)
 
@@ -103,7 +108,7 @@ def sendToGroups():
             time.sleep(8)
         except Exception as e:
             with open("Error Logs.log", "a") as file:
-                file.write(f"There was an error posting to group '{group}', the error has been pasted below.\n")
+                file.write(f"There was an error posting to group '{groupName}', the error has been pasted below.\n")
                 file.write(f"{str(e)}\n\n")
 
                 file.close()
@@ -112,9 +117,18 @@ def sendToGroups():
     
     browser.close()
 
+    return
+
 
 if __name__ == "__main__":
     checkFilesExist()
     sendToGroups()
-    time.sleep(1)
+
+    os.system('cls')
+
+    print("Posting to Groups Complete.")
+    print()
+
+    input("Press ENTER Key to Exit...")
+
     exit()
