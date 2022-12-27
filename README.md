@@ -7,7 +7,7 @@ This program will run in the open background, allowing you to do anything while 
 ## How to use
 
 ### MUST KNOW FIX:
-If you launch the python file, and it closes right away after trying to open chrome, and you know 100% that everything was inputted correctly, the file 'chromedriver.exe' may be out of date. Go to https://chromedriver.chromium.org/downloads, and select your chrome version (To find: Three Dots -> Help -> About Google Chrome), then download the chromedriver for your operating system.
+If you launch the program, and it closes right away after trying to open chrome, and you know 100% that everything was inputted correctly, the file 'chromedriver.exe' may be out of date. Go to https://chromedriver.chromium.org/downloads, and select your chrome version (To find: Three Dots -> Help -> About Google Chrome), then download the chromedriver for your operating system.
 
 ### Before Launching Program:
 Make sure you use the command `pip install -r requirements.txt` in terminal first.
