@@ -1,7 +1,9 @@
 from selenium.webdriver.common.by import By
 from selenium import webdriver
+from colorama import Fore, init
 import time
 import os
+init(autoreset=True)
 
 
 def checkFilesExist():
@@ -83,6 +85,8 @@ def sendToGroups():
 
     time.sleep(7)
 
+    count = 0
+
     for group in groups:
         groupName = group[32:-1]
 
@@ -106,12 +110,17 @@ def sendToGroups():
             browser.find_element(By.XPATH, "//span[text()='Post']").click()
 
             time.sleep(8)
+
+            count += 1
+            print(f"{Fore.GREEN}Posted to Group: {Fore.WHITE}{group} {Fore.CYAN}({count}/{len(groups)})")
         except Exception as e:
             with open("Error Logs.log", "a") as file:
                 file.write(f"There was an error posting to group '{groupName}', the error has been pasted below.\n")
                 file.write(f"{str(e)}\n\n")
 
                 file.close()
+
+            print(f"{Fore.RED}Error!: {Fore.WHITE}Unable to post to group '{group}', check 'Error Logs.log'.")
 
             pass
     
