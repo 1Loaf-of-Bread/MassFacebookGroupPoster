@@ -25,8 +25,8 @@ Make sure 'groups' folder, 'postText.txt' file, and 'chromedriver.exe' file are 
 ### How to Use:
 When in the menu, where the printed text that says 'Available Group Files to Pick:' and such. You are to enter the number assigned to the file listed right of the number.
 
-If you want to remove a group you added for posting, type in ':r1' without the quotes, and 1 being the number assigned to the left of the file name.
+If you want to remove a group you added for posting, type in `:r1`, and 1 being the number assigned to the left of the file name.
 
-If you want to select all files, type in ':a' without the quotes.
+If you want to select all files, type in `:a`.
 
-Once you have selected the group files you want for posting type in ':p' without the quotes to begin posting.
+Once you have selected the group files you want for posting type in `:p` to begin posting.
