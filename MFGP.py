@@ -220,7 +220,6 @@ def sendToGroups(postText, groups):
 
             waitPageLoad(browser, "_5rpu")
 
-
             writePost = browser.find_element(By.CLASS_NAME, "_5rpu")
             writePost.send_keys(postText)
 
@@ -228,7 +227,13 @@ def sendToGroups(postText, groups):
 
             browser.find_element(By.XPATH, "//span[text()='Post']").click()
 
-            sleep(3)
+            try:
+                alert = browser.switch_to.alert()
+                alert.accept()
+            except:
+                a=0
+
+            sleep(5)
 
             count += 1
             print(f"{Fore.GREEN}Posted to Group: {Fore.WHITE}{groupName} {Fore.CYAN}({count}/{len(groups)})")
