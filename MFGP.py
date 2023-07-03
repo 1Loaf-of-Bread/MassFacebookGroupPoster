@@ -1,9 +1,13 @@
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium import webdriver
 from colorama import Fore, init
 from time import sleep
+from io import BytesIO
+import win32clipboard
+from PIL import Image
 import os
 init(autoreset=True)
 
@@ -35,6 +39,7 @@ def checkFilesExist():
     
 
 def mainMenu():
+    imageFile = ""
     groupFiles = []
 
     for file in os.listdir("Groups"):
@@ -62,6 +67,15 @@ def mainMenu():
 
         os.system('cls')
 
+        print("To add a group type in the number to the left of the group file.")
+        print("To select all group files type ':a'")
+        print("To add an image to the post type ':i x' x being the exact path to the image.")
+        print("To remove a group file type ':rx' x being the number on the menu.")
+        print("To begin posting type ':p'")
+
+        print()
+        print()
+
         print("Available Group Files to Pick: ")
         print()
 
@@ -79,10 +93,21 @@ def mainMenu():
 
             print()
 
+        if imageFile != "":
+            print(f"Image: {imageFile}")
+            print()
+
         numChoice = input("--> ")
 
         if numChoice.lower() == ":p":
-            return postingGroups
+            if postingGroups != []:
+                return postingGroups, imageFile
+            else:
+                print(f"{Fore.RED}ERROR!: {Fore.WHITE}You currently have no posting groups selected.")
+                sleep(1.5)
+
+                continue
+
         if numChoice.lower() == ":a":
             postingGroups = groupFiles
             groupFiles = []
@@ -91,7 +116,7 @@ def mainMenu():
 
         if numChoice[0:2].lower() == ":r":
             if postingGroups == []:
-                print(f"{Fore.RED}ERROR!: {Fore.WHITE}You currently have no posting groups selected.")
+                print(f"{Fore.RED}ERROR!: {Fore.WHITE}Please enter the number of a posting group.")
                 sleep(1.5)
 
                 continue
@@ -113,37 +138,42 @@ def mainMenu():
                 postingGroups.remove(postingGroups[removalNum-1])
 
                 continue
+        if numChoice[0:3] == ":i ":
+            imageFile = numChoice[3:]
         elif not numChoice.isdigit():
-            print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Please enter a numerical value.")
+            print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Please follow the rules shown at the top of the main menu.")
             sleep(1.5)
 
             continue
         
-        numChoice = int(numChoice) - 1
+        try:
+            numChoice = int(numChoice) - 1
 
-        if numChoice > len(groupFiles) or numChoice <= -1:
-            print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Please enter one of the numbers shown above.")
-            sleep(1.5)
-
-            continue
-        elif groupFiles[numChoice] not in postingGroups:
-            if groupFiles[numChoice] in groupFiles:
-                postingGroups.append(groupFiles[numChoice])
-
-                groupFiles.remove(groupFiles[numChoice])
-            else:
-                print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Group file '{groupFiles[numChoice]}' not in listed group files above.")
+            if numChoice > len(groupFiles) or numChoice <= -1:
+                print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Please enter one of the numbers shown above.")
                 sleep(1.5)
 
                 continue
-        else:
-            print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Group file '{groupFiles[numChoice]}' already added.")
-            sleep(1.5)
+            elif groupFiles[numChoice] not in postingGroups:
+                if groupFiles[numChoice] in groupFiles:
+                    postingGroups.append(groupFiles[numChoice])
 
-            continue
+                    groupFiles.remove(groupFiles[numChoice])
+                else:
+                    print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Group file '{groupFiles[numChoice]}' not in listed group files above.")
+                    sleep(1.5)
+
+                    continue
+            else:
+                print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Group file '{groupFiles[numChoice]}' already added.")
+                sleep(1.5)
+
+                continue
+        except:
+            pass
 
 
-def grabData(groupFiles):
+def grabData(groupFiles, imageFile):
     postText = ""
 
     with open('postText.txt', 'r') as file:
@@ -163,6 +193,20 @@ def grabData(groupFiles):
         for group in fileLines:
             groups.append(group[0:-1])
 
+    if imageFile != "":
+        win32clipboard.OpenClipboard()
+        win32clipboard.EmptyClipboard()
+
+        image = Image.open(imageFile)
+
+        output = BytesIO()
+        image.convert('RGB').save(output, 'BMP')
+        imageFileData = output.getvalue()[14:]
+        output.close()
+
+        win32clipboard.SetClipboardData(win32clipboard.CF_DIB, imageFileData)
+        win32clipboard.CloseClipboard()
+
     return postText, groups
 
 
@@ -178,7 +222,6 @@ def waitPageLoad(browser, name):
             continue
 
 
-
 def sendToGroups(postText, groups):
     os.system('cls')
 
@@ -192,7 +235,7 @@ def sendToGroups(postText, groups):
     browser.maximize_window()
     
     emailText = "email"
-    passwordText = "pass"
+    passwordText = "password"
 
     email = browser.find_element(By.NAME, "email")
     email.send_keys(emailText)
@@ -223,6 +266,10 @@ def sendToGroups(postText, groups):
             writePost = browser.find_element(By.CLASS_NAME, "_5rpu")
             writePost.send_keys(postText)
 
+            if imageFile != "":
+                sleep(1)
+                writePost.send_keys(Keys.CONTROL, 'v')
+
             sleep(1)
 
             browser.find_element(By.XPATH, "//span[text()='Post']").click()
@@ -231,7 +278,7 @@ def sendToGroups(postText, groups):
                 alert = browser.switch_to.alert()
                 alert.accept()
             except:
-                a=0
+                pass
 
             sleep(5)
 
@@ -257,8 +304,8 @@ def sendToGroups(postText, groups):
 if __name__ == "__main__":
     checkFilesExist()
 
-    groupFiles = mainMenu()
-    postText, groups = grabData(groupFiles)
+    groupFiles, imageFile = mainMenu()
+    postText, groups = grabData(groupFiles, imageFile)
 
     sendToGroups(postText, groups)
 
