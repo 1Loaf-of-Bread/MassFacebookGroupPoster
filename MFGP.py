@@ -68,10 +68,11 @@ def mainMenu():
         os.system('cls')
 
         print("To add a group type in the number to the left of the group file.")
-        print("To select all group files type ':a'")
-        print("To add an image to the post type ':i x' x being the exact path to the image.")
-        print("To remove a group file type ':rx' x being the number on the menu.")
-        print("To begin posting type ':p'")
+        print("To select all group files type, ':a'")
+        print("To add an image to the post type, ':i x' x being the exact path to the image.")
+        print("To remove the selected image, type ':ir' x being the exact path to the image.")
+        print("To remove a group file, type ':rx' x being the number on the menu.")
+        print("To begin posting, type ':p'")
 
         print()
         print()
@@ -140,6 +141,8 @@ def mainMenu():
                 continue
         if numChoice[0:3] == ":i ":
             imageFile = numChoice[3:]
+        elif numChoice[0:3] == ":ir":
+            imageFile = ""
         elif not numChoice.isdigit():
             print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Please follow the rules shown at the top of the main menu.")
             sleep(1.5)
@@ -247,6 +250,7 @@ def sendToGroups(postText, groups):
     waitPageLoad(browser, "x3ajldb")
 
     count = 0
+    failCount = 0
 
     for group in groups:
         groupName = group[32:]
@@ -292,13 +296,14 @@ def sendToGroups(postText, groups):
                 file.close()
 
             count += 1
-            print(f"{Fore.RED}Error!: {Fore.WHITE}Unable to post to group '{groupName}', check 'Error Logs.log'. {Fore.CYAN}({count}/{len(groups)})")
+            failCount += 1
+            print(f"{Fore.RED}Error!: {Fore.WHITE}Failed to post to group '{groupName}', check file 'Error Logs.log' for reason. {Fore.CYAN}({count}/{len(groups)})")
 
             pass
     
     browser.close()
 
-    return
+    return failCount, count
 
 
 if __name__ == "__main__":
@@ -307,7 +312,19 @@ if __name__ == "__main__":
     groupFiles, imageFile = mainMenu()
     postText, groups = grabData(groupFiles, imageFile)
 
-    sendToGroups(postText, groups)
+    failCount, count = sendToGroups(postText, groups)
+
+    print()
+    print()
+
+    if failCount != 0:
+        print(f"{Fore.RED}Failed{Fore.WHITE} to post to {failCount} out of {count} groups.")
+        print()
+        print("Check above to see groups where posting has failed.")
+        print("Check the file \"Error Logs.log\" to see reason for posting failure.")
+        print("Please also check to make sure you were not banned/removed/restricted from that group.")
+    else:
+        print(f"{Fore.GREEN}Successfully{Fore.WHITE} posted to all groups.")
 
     print()
     print()
