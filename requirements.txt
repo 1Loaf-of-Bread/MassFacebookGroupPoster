@@ -1,2 +1,5 @@
 colorama==0.4.6
-selenium==4.8.2
+Pillow==9.4.0
+Pillow==10.0.0
+pywin32==306
+selenium==4.10.0
