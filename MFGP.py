@@ -1,5 +1,6 @@
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium import webdriver
@@ -231,7 +232,8 @@ def sendToGroups(postText, groups):
     chrome_options = webdriver.ChromeOptions()
     prefs = {"profile.default_content_setting_values.notifications" : 2}
     chrome_options.add_experimental_option("prefs", prefs)
-    browser = webdriver.Chrome(chrome_options=chrome_options)
+    service = Service(executable_path='./chromedriver.exe')
+    browser = webdriver.Chrome(service=service, chrome_options=chrome_options)
 
     browser.get('https://www.facebook.com/')
     browser.implicitly_wait(5)
