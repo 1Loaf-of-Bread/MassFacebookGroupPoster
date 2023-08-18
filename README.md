@@ -4,14 +4,17 @@ Mass Facebook group poster is a program that will post any message you want to a
 
 This program will run in the open background, allowing you to do anything while the program is running.
 
+## Known error fixes:
+If the program window opens but then closes right away after trying to open chrome, then the file chromedriver.exe might be out of date. To fix this all you have to do is download the latest chromedriver.exe file and replace the one in the MFGP folder with the new file. Make sure the version of chromedriver.exe that you download matches the same version as the chrome installed on your system.
+
 ## Before Launching Program:
 Make sure you use the command `pip install -r requirements.txt` in terminal first.
 
 Before launching the program, you must change the emailText and passwordText values in the program, to allow the program to login on the Facebook website with your email and password.
 
-The emailText variable is located on line 240, and you must input your email inbetween the double quotation marks.
+The emailText variable is located on line 242, and you must input your email inbetween the double quotation marks.
 
-The passwordText variable is located on line 241, and you must input your password inbetween the double quotation marks.
+The passwordText variable is located on line 243, and you must input your password inbetween the double quotation marks.
 
 ## How to Add Groups:
 In the groups folder, create any 'name.list' file, the extension must be .list or the program will not find it. You can create multiple of these files, based on group category, name, anything you would like. In these files you must paste the full facebook group link with a new line separating them. I have provided a couple files in the groups folder to use as a reference.
