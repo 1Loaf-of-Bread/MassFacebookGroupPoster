@@ -233,7 +233,7 @@ def sendToGroups(postText, groups):
     prefs = {"profile.default_content_setting_values.notifications" : 2}
     chrome_options.add_experimental_option("prefs", prefs)
     service = Service(executable_path='./chromedriver.exe')
-    browser = webdriver.Chrome(service=service, chrome_options=chrome_options)
+    browser = webdriver.Chrome(service=service, options=chrome_options)
 
     browser.get('https://www.facebook.com/')
     browser.implicitly_wait(5)
