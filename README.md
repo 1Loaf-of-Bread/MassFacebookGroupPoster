@@ -4,7 +4,7 @@ Mass Facebook group poster is a program that will post any message you want to a
 
 This program will run in the open background, allowing you to do anything while the program is running.
 
-## Known error fixes:
+## Known Error Fixes:
 If the program window opens but then closes right away after trying to open chrome, then the file chromedriver.exe might be out of date. To fix this all you have to do is download the latest chromedriver.exe file and replace the one in the MFGP folder with the new file. Make sure the version of chromedriver.exe that you download matches the same version as the chrome installed on your system.
 
 ## Before Launching Program:
