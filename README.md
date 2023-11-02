@@ -42,4 +42,4 @@ If you changed the group list files whle the program is running please click the
 
 Once you have selected the group files, and an image if you want to add an image to the post, click the button that says "Start Posting" at the bottom of the GUI to begin posting.
 
-Enjoy using MassFacebookGroupPoster to streamline your Facebook group postings!
+### Enjoy using MassFacebookGroupPoster to streamline your Facebook group postings!
