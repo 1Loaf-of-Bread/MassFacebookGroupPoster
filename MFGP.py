@@ -2,207 +2,65 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
+from get_chrome_driver import GetChromeDriver
 from selenium.webdriver.common.by import By
-from selenium import webdriver
 from colorama import Fore, init
+from selenium import webdriver
 from time import sleep
 from io import BytesIO
 import win32clipboard
 from PIL import Image
+import customtkinter
+import ctypes
 import os
 init(autoreset=True)
 
+customtkinter.set_appearance_mode("dark")
+customtkinter.set_default_color_theme("blue")
+
+
+### ~~~ Pre-Posting ~~~ ###
 
 def checkFilesExist():
-    fileMissing = False
+    required_files = ["postText.txt", "groups", "chromedriver.exe"]
+    missing_files = [file for file in required_files if not os.path.exists(file)]
 
-    if not os.path.isfile("postText.txt"):
-        print("ERROR! File Missing: postText.txt")
-        fileMissing = True
-
-    if not os.path.isdir("groups"):
-        print("ERROR! Folder Missing: groups")
-        fileMissing = True
-    
-    if not os.path.isfile("chromedriver.exe"):
-        print("ERROR! File Missing: chromedriver.exe")
-        fileMissing = True
-
-    if fileMissing:
-        print()
-        print("Please make sure 'groups' folder, 'postText.txt' file, and 'chromedriver.exe' file are all in the same dir as 'MFGP.py'. ")
-        print()
-        input("Press ENTER to Exit...")
-
+    if missing_files:
+        message = "\n".join([f"File/Folder Missing: {file}" for file in missing_files])
+        ctypes.windll.user32.MessageBoxW(0, f"{message}\n\nPlease make sure the required files/folders are in the same directory as 'MFGP.py'.", "ERROR!", 0)
         exit()
 
-    return
-    
 
-def mainMenu():
-    imageFile = ""
-    groupFiles = []
+def checkChromeDriver():
+    print("Checking Installed ChromeDriver...")
+    get_driver = GetChromeDriver()
+    get_driver.install(output_path=os.getcwd())
+    print("Complete.")
 
-    for file in os.listdir("Groups"):
-        if os.path.isfile(os.path.join("Groups", file)):
-            if os.path.splitext(file)[1] == ".list":
-                groupFiles.append(file)
 
-    if groupFiles == []:
-        os.system('cls')
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
-        print(f"{Fore.RED}ERROR!: {Fore.WHITE}There are no group.list files provided.")
-        print()
-        print("Please add files such as 'facebook_groups.list' in the 'Groups' folder.")
-        print()
-
-        input("Press ENTER Key to Exit...")
-
-        exit()
-
-    postingGroups = []
-
-    while True:
-        groupFiles.sort()
-        postingGroups.sort()
-
-        os.system('cls')
-
-        print("To add a group type in the number to the left of the group file.")
-        print("To select all group files type, ':a'")
-        print("To add an image to the post type, ':i x' x being the exact path to the image.")
-        print("To remove the selected image, type ':ir' x being the exact path to the image.")
-        print("To remove a group file, type ':rx' x being the number on the menu.")
-        print("To begin posting, type ':p'")
-
-        print()
-        print()
-
-        print("Available Group Files to Pick: ")
-        print()
-
-        for groupFile in groupFiles:
-            print(f"    {groupFiles.index(groupFile)+1}. {groupFile}")
-
-        print()
-
-        if postingGroups != []:
-            print("Posting to Groups:")
-            print()
-
-            for groupFile in postingGroups:
-                print(f"    {postingGroups.index(groupFile)+1}. {groupFile}")
-
-            print()
-
-        if imageFile != "":
-            print(f"Image: {imageFile}")
-            print()
-
-        numChoice = input("--> ")
-
-        if numChoice.lower() == ":p":
-            if postingGroups != []:
-                return postingGroups, imageFile
-            else:
-                print(f"{Fore.RED}ERROR!: {Fore.WHITE}You currently have no posting groups selected.")
-                sleep(1.5)
-
-                continue
-
-        if numChoice.lower() == ":a":
-            postingGroups = groupFiles
-            groupFiles = []
-            
-            continue
-
-        if numChoice[0:2].lower() == ":r":
-            if postingGroups == []:
-                print(f"{Fore.RED}ERROR!: {Fore.WHITE}Please enter the number of a posting group.")
-                sleep(1.5)
-
-                continue
-            elif len(numChoice) < 3 or numChoice[2:].isdigit() == False:
-                print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Please enter one of the numbers shown above for removal.")
-                sleep(1.5)
-
-                continue
-            else:
-                removalNum = int(numChoice[2:])
-
-                if removalNum > len(postingGroups) or removalNum <= -1:
-                    print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Please enter one of the numbers shown above.")
-                    sleep(1.5)
-
-                    continue
-
-                groupFiles.append(postingGroups[removalNum-1])
-                postingGroups.remove(postingGroups[removalNum-1])
-
-                continue
-        if numChoice[0:3] == ":i ":
-            imageFile = numChoice[3:]
-        elif numChoice[0:3] == ":ir":
-            imageFile = ""
-        elif not numChoice.isdigit():
-            print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Please follow the rules shown at the top of the main menu.")
-            sleep(1.5)
-
-            continue
-        
-        try:
-            numChoice = int(numChoice) - 1
-
-            if numChoice > len(groupFiles) or numChoice <= -1:
-                print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Please enter one of the numbers shown above.")
-                sleep(1.5)
-
-                continue
-            elif groupFiles[numChoice] not in postingGroups:
-                if groupFiles[numChoice] in groupFiles:
-                    postingGroups.append(groupFiles[numChoice])
-
-                    groupFiles.remove(groupFiles[numChoice])
-                else:
-                    print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Group file '{groupFiles[numChoice]}' not in listed group files above.")
-                    sleep(1.5)
-
-                    continue
-            else:
-                print(f"\n{Fore.RED}ERROR!: {Fore.WHITE}Group file '{groupFiles[numChoice]}' already added.")
-                sleep(1.5)
-
-                continue
-        except:
-            pass
+###########################
 
 
 def grabData(groupFiles, imageFile):
     postText = ""
 
     with open('postText.txt', 'r') as file:
-        postLines = file.readlines()
-        file.close()
-
-    for i in postLines:
-        postText += i
+        postText = file.read()
 
     groups = []
 
     for groupFile in groupFiles:
         with open(f"groups\\{groupFile}", 'r') as fileRead:
-            fileLines = fileRead.readlines()
-            fileRead.close()
+            groups.extend([group.strip() for group in fileRead.readlines()])
 
-        for group in fileLines:
-            groups.append(group[0:-1])
-
-    if imageFile != "":
+    if imageFile:
         win32clipboard.OpenClipboard()
         win32clipboard.EmptyClipboard()
 
         image = Image.open(imageFile)
-
         output = BytesIO()
         image.convert('RGB').save(output, 'BMP')
         imageFileData = output.getvalue()[14:]
@@ -211,77 +69,73 @@ def grabData(groupFiles, imageFile):
         win32clipboard.SetClipboardData(win32clipboard.CF_DIB, imageFileData)
         win32clipboard.CloseClipboard()
 
-    return postText, groups
+    with open("UP.txt", 'r') as fileRead:
+        email, password = map(str.strip, fileRead.readline().split(','))
+
+    return postText, groups, email, password
 
 
-def waitPageLoad(browser, name):            
+### ~~~ Posting to Groups ~~~ ###
+
+def waitPageLoad(browser, name):
     while True:
         try:
             WebDriverWait(browser, 1).until(expected_conditions.presence_of_element_located((By.CLASS_NAME, name)))
-
             sleep(1)
-
             break
         except TimeoutError:
             continue
 
 
-def sendToGroups(postText, groups):
-    os.system('cls')
-
+def postToGroups(postText, groups, imageFile, emailText, passwordText):
+    clear_screen()
     chrome_options = webdriver.ChromeOptions()
-    prefs = {"profile.default_content_setting_values.notifications" : 2}
+    prefs = {"profile.default_content_setting_values.notifications": 2}
     chrome_options.add_experimental_option("prefs", prefs)
     service = Service(executable_path='./chromedriver.exe')
     browser = webdriver.Chrome(service=service, options=chrome_options)
 
     browser.get('https://www.facebook.com/')
-    browser.implicitly_wait(5)
+    browser.implicitly_wait(10)
     browser.maximize_window()
-    
-    emailText = "email"
-    passwordText = "password"
 
     email = browser.find_element(By.NAME, "email")
     email.send_keys(emailText)
     password = browser.find_element(By.NAME, "pass")
     password.send_keys(passwordText)
 
-    browser.find_element(By.NAME, "login").click()
-
+    WebDriverWait(browser, 10).until(expected_conditions.element_to_be_clickable((By.NAME, "login"))).click()
     waitPageLoad(browser, "x3ajldb")
 
     count = 0
     failCount = 0
 
     for group in groups:
-        groupName = group[32:]
-
-        if groupName[-1] == "/":
-            groupName = groupName[0:-1]
+        group_url = group.strip()
+        group_name = os.path.basename(group_url.rstrip('/'))
 
         try:
-            browser.get(group)
-
+            browser.get(group_url)
             waitPageLoad(browser, "x3ajldb")
 
-            browser.find_element(By.XPATH, "//*[contains(text(), 'Write something...')]").click()
-
+            writeSomethingElement = WebDriverWait(browser, 10).until(expected_conditions.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Write something...')]")))
+            writeSomethingElement.click()
             waitPageLoad(browser, "_5rpu")
 
             writePost = browser.find_element(By.CLASS_NAME, "_5rpu")
             writePost.send_keys(postText)
 
-            if imageFile != "":
+            if imageFile:
                 sleep(1)
                 writePost.send_keys(Keys.CONTROL, 'v')
 
             sleep(1)
 
-            browser.find_element(By.XPATH, "//span[text()='Post']").click()
+            postButtonElement = WebDriverWait(browser, 10).until(expected_conditions.element_to_be_clickable((By.XPATH, "//span[text()='Post']")))
+            browser.execute_script("arguments[0].click();", postButtonElement)
 
             try:
-                alert = browser.switch_to.alert()
+                alert = browser.switch_to.alert
                 alert.accept()
             except:
                 pass
@@ -289,50 +143,149 @@ def sendToGroups(postText, groups):
             sleep(5)
 
             count += 1
-            print(f"{Fore.GREEN}Posted to Group: {Fore.WHITE}{groupName} {Fore.CYAN}({count}/{len(groups)})")
+            print(f"{Fore.GREEN}Posted to Group: {Fore.WHITE}{group_name} {Fore.CYAN}({count}/{len(groups)})")
         except Exception as e:
             with open("Error Logs.log", "a") as file:
-                file.write(f"There was an error posting to group '{groupName}', the error has been pasted below.\n")
+                file.write(f"There was an error posting to group '{group_name}', the error has been pasted below.\n")
                 file.write(f"{str(e)}\n\n")
-
-                file.close()
 
             count += 1
             failCount += 1
-            print(f"{Fore.RED}Error!: {Fore.WHITE}Failed to post to group '{groupName}', check file 'Error Logs.log' for reason. {Fore.CYAN}({count}/{len(groups)})")
+            print(f"{Fore.RED}Error!: {Fore.WHITE}Failed to post to group '{group_name}', check file 'Error Logs.log' for the reason. {Fore.CYAN}({count}/{len(groups)})")
 
             pass
-    
+
     browser.close()
 
     return failCount, count
 
 
+### ~~~ GUI ~~~ ###
+
+class App(customtkinter.CTk):
+    def __init__(self):
+        super().__init__()
+
+        self.getGroupsList()
+
+        self.geometry("350x455")
+        self.title("MassFacebookGroupPoster v2.0.0")
+        self.resizable(False, False)
+
+        self.postingGroupsString = ""
+        self.imagePath = ""
+
+        groupSelectionLabel = customtkinter.CTkLabel(self, text="Please select the group files you wish to post to.")
+        groupSelectionLabel.grid(row=0, padx=15, pady=5, sticky="nsew")
+
+        self.groupSelectionBox = customtkinter.CTkComboBox(self, values=self.groupsList, width=2)
+        self.groupSelectionBox.set("Select Group Files")
+        self.groupSelectionBox.grid(row=1, padx=15, pady=5, sticky="nsew")
+
+        refreshSelectionBoxButton = customtkinter.CTkButton(self, width=2, height=2, text="Refresh Group File Selection List", command=self.refreshGroupList)
+        refreshSelectionBoxButton.grid(row=2, padx=15, pady=5, sticky="nsew")
+
+        buttonsFrame = customtkinter.CTkFrame(self)
+        buttonsFrame.grid(row=3, padx=15, pady=5, sticky="nsew")
+
+        addGroupButton = customtkinter.CTkButton(buttonsFrame, text="Add Group", height=2, width=2, command=self.addGroup)
+        addGroupButton.grid(row=0, column=0, padx=30, pady=5, sticky="nsew")
+        addAllGroupsButton = customtkinter.CTkButton(buttonsFrame, text="Add All Groups", height=2, width=2, command=self.addAllGroups)
+        addAllGroupsButton.grid(row=1, column=0, padx=30, pady=5, sticky="nsew")
+
+        removeGroupButton = customtkinter.CTkButton(buttonsFrame, text="Remove Group", height=2, width=2, command=self.removeGroup)
+        removeGroupButton.grid(row=0, column=1, padx=30, pady=5, sticky="nsew")
+        removeAllGroupsButton = customtkinter.CTkButton(buttonsFrame, text="Remove All Groups", height=2, width=2, command=self.removeAllGroups)
+        removeAllGroupsButton.grid(row=1, column=1, padx=30, pady=5, sticky="nsew")
+
+        addImageButton = customtkinter.CTkButton(buttonsFrame, text="Add Image", height=2, width=2, command=self.addImage)
+        addImageButton.grid(row=2, column=0, padx=30, pady=5, sticky="nsew")
+        removeImageButton = customtkinter.CTkButton(buttonsFrame, text="Remove Image", height=2, width=2, command=self.removeImage)
+        removeImageButton.grid(row=2, column=1, padx=30, pady=5, sticky="nsew")
+
+        self.textBox = customtkinter.CTkTextbox(self, width=250)
+        self.textBox.configure(state="disabled")
+        self.textBox.grid(row=5, padx=15, pady=5, sticky="nsew")
+
+        self.imageFrame = customtkinter.CTkFrame(self)
+        self.imageFrameLabel = customtkinter.CTkLabel(self.imageFrame, width=200)
+        self.imageFrameLabel.grid_forget()
+
+        startPostingButton = customtkinter.CTkButton(self, height=2, width=2, text="Start Posting", command=self.startPosting)
+        startPostingButton.grid(row=6, padx=100, pady=5, sticky="nsew")
+
+
+    def getGroupsList(self):
+        self.groupsList = [file.name for file in os.scandir("groups") if file.is_file() and file.name.endswith('.list')]
+
+
+    def refreshGroupList(self):
+        self.getGroupsList()
+        self.groupSelectionBox.configure(values=self.groupsList)
+
+
+    def addGroup(self):
+        selected_group = self.groupSelectionBox.get()
+        if selected_group not in self.postingGroupsString and selected_group in self.groupsList:
+            self.postingGroupsString += f"{selected_group}\n"
+            self.update_groups_text()
+
+
+    def addAllGroups(self):
+        for group in self.groupsList:
+            if group not in self.postingGroupsString:
+                self.postingGroupsString += f"{group}\n"
+        self.update_groups_text()
+
+
+    def removeGroup(self):
+        selected_group = self.groupSelectionBox.get()
+        if selected_group in self.postingGroupsString:
+            self.postingGroupsString = self.postingGroupsString.replace(f"{selected_group}\n", "")
+            self.update_groups_text()
+
+
+    def removeAllGroups(self):
+        self.postingGroupsString = ""
+        self.update_groups_text()
+
+
+    def addImage(self):
+        self.imagePath = customtkinter.filedialog.askopenfile(initialdir="%homepath%\Desktop", title="Select an Image File", filetypes=(("Image Files", "*.jpg *.png"), ("all files", "*.*")))
+        self.imagePath = self.imagePath.name
+
+        self.imageFrame.grid_forget()
+        self.imageFrameLabel.grid_forget()
+
+        self.imageFrame.grid(row=4, padx=15, pady=5, sticky="nsew")
+        self.imageFrameLabel = customtkinter.CTkLabel(self.imageFrame, width=200, text=os.path.basename(self.imagePath))
+        self.imageFrameLabel.grid(padx=20, pady=5, sticky="w")
+
+        self.geometry("350x505")
+
+
+    def removeImage(self):
+        self.imagePath = ""
+        self.imageFrame.grid_forget()
+        self.imageFrameLabel.grid_forget()
+        self.geometry("350x455")
+
+
+    def startPosting(self):
+        postText, groups, email, password = grabData(self.groupsList, self.imagePath)
+        postToGroups(postText, groups, self.imagePath, email, password)
+
+
+    def update_groups_text(self):
+        self.textBox.configure(state="normal")
+        self.textBox.delete("0.0", customtkinter.END)
+        self.textBox.insert("0.0", self.postingGroupsString)
+        self.textBox.configure(state="disabled")
+
+
 if __name__ == "__main__":
+    checkChromeDriver()
     checkFilesExist()
 
-    groupFiles, imageFile = mainMenu()
-    postText, groups = grabData(groupFiles, imageFile)
-
-    failCount, count = sendToGroups(postText, groups)
-
-    print()
-    print()
-
-    if failCount != 0:
-        print(f"{Fore.RED}Failed{Fore.WHITE} to post to {failCount} out of {count} groups.")
-        print()
-        print("Check above to see groups where posting has failed.")
-        print("Check the file \"Error Logs.log\" to see reason for posting failure.")
-        print("Please also check to make sure you were not banned/removed/restricted from that group.")
-    else:
-        print(f"{Fore.GREEN}Successfully{Fore.WHITE} posted to all groups.")
-
-    print()
-    print()
-    print("Posting to Groups Complete.")
-    print()
-
-    input("Press ENTER Key to Exit...")
-
-    exit()
+    app = App()
+    app.mainloop()
