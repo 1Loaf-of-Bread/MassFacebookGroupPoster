@@ -42,4 +42,14 @@ If you changed the group list files whle the program is running please click the
 
 Once you have selected the group files, and an image if you want to add an image to the post, click the button that says "Start Posting" at the bottom of the GUI to begin posting.
 
+## How to Support
+Support me by making cryptocurrency donations ^~^
+- Bitcoin (BTC) - 14YfYXJJqDpwp3rHghhr7cuiihgvEdSBV6
+- Ethereum (ETH) - 0x53678F8f4966ADeD487e4826e69eF11aaedc4a43
+- Solana (SOL) - 7bSAFtxLPmjHkW5Ej7pqMN7Zr6u7HF7CDFWdmjEYSuUq
+- Doge (DOGE) - D8naE2zceDgeobUJvfWtP514HVXEvopvuj
+- Litecoin (LTC) - LTCvkusSZoDCxMzKkFXkkkiRi83MzfBXYU
+- Monero (XMR) - 41pKAT2XGafTQqasEYSw2XNJCwfsuLWPsRCkdxeinfRU2rvPQ6XGsxqRnBKUYPhrhvSoGF721Qb9Bimf7eS4vuPTPVoJdbY
+- Ravencoin (RVN) - RUWVDYqTby2PaNhrXpjoBevwyi6rQe7axC
+
 ### Enjoy using MassFacebookGroupPoster to streamline your Facebook group postings!
