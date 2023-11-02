@@ -1,40 +1,45 @@
-# MassFacebookGroupPoster
+# MassFacebookGroupPoster v2.0.0
 
-Mass Facebook group poster is a program that will post any message you want to any amount of groups you wish to post too.
+MassFacebookGroupPoster is a powerful program that simplifies and automates posting messages to multiple Facebook groups. With this tool, you can efficiently manage and automate your group postings, saving you time and effort.
 
-This program will run in the open background, allowing you to do anything while the program is running.
+## Preparing to Use the Program
 
-## Known Error Fixes:
-If the program window opens but then closes right away after trying to open chrome, then the file chromedriver.exe might be out of date. To fix this all you have to do is download the latest chromedriver.exe file and replace the one in the MFGP folder with the new file. Make sure the version of chromedriver.exe that you download matches the same version as the chrome installed on your system.
+Before running the program, please follow these steps:
 
-## Before Launching Program:
-Make sure you use the command `pip install -r requirements.txt` in terminal first.
+1. **Install Required Dependencies:**
+    Ensure you have the necessary Python packages installed by running the following command in your terminal:
+    'pip install -r requirements.txt'
 
-Before launching the program, you must change the emailText and passwordText values in the program, to allow the program to login on the Facebook website with your email and password.
+2. **Configure Your Facebook Login Credentials:**
+Open the txt file named "UP.txt" and input your email and password there, please to not remove the comma. The format must be like "asd@gmail.com, qwerty123" (without the quotations) for the program to read the file properly.
 
-The emailText variable is located on line 242, and you must input your email inbetween the double quotation marks.
+## Adding Facebook Groups
 
-The passwordText variable is located on line 243, and you must input your password inbetween the double quotation marks.
+You can specify the Facebook groups you want to post to by creating '.list' files in the 'groups' directory. Each '.list' file can contain multiple group URLs, with each URL on a new line. The 'groups' folder is provided with example group list files for reference.
 
-## How to Add Groups:
-In the groups folder, create any 'name.list' file, the extension must be .list or the program will not find it. You can create multiple of these files, based on group category, name, anything you would like. In these files you must paste the full facebook group link with a new line separating them. I have provided a couple files in the groups folder to use as a reference.
+## Editing the Post Message
 
-## How to Edit Post Message:
-To edit your post message, type what you want to post into the file 'postText.txt'. Spaces, special chars, newlines are all okay, write the message as your normally would on Facebook. Emojis are the exception, as they do not work with the program.
+To customize the post message, open the 'postText.txt' file and write your desired message. You can include spaces, special characters, and newlines as you normally would on Facebook. Please note that emojis are not supported by the program.
 
-## Adding an Image to Post:
-To add an image to the post type ':i x' x being the exact full path to the image. By full path this means that x must be 'C:\Users\username\Desktop\picture.png', a full path is the 'driveLetter:\Path\file.ext'.
+## Adding an Image to Your Post
 
-**IMPORTANT** - The way this program adds an image to the post is through the systems clipboard, this means that while the program is posting with the image, **you cannot copy anything to the clipboard with ctrl+c or copy**.
+To include an image in your post, click on the button that says "Add Image" and navigate to the image you want to add, select it and then click the open button on the bottom right of the explorer window. Be aware that when using an image, the program uses the computers clipboard, so do not copy anything while the program is running because it will then post what you newly copied to the system clipboard.
 
-## How to Launch:
-Make sure 'groups' folder, 'postText.txt' file, and 'chromedriver.exe' file are all in the same dir as 'MFGP.py'. To launch the program, just double click 'MFGP.py' or use the command `python MFGP.py` in terminal.
+## How to Launch
 
-## How to Use:
-When in the menu, where the printed text that says 'Available Group Files to Pick:' and such. You are to enter the number assigned to the file listed right of the number.
+To run the program, ensure that the 'groups' folder and 'postText.txt' file are all located in the same directory as 'MFGP.py'. Double-click 'MFGP.py' or use the command `python MFGP.py` in the terminal to start running the program.
 
-If you want to remove a group you added for posting, type in `:r1`, and 1 being the number assigned to the left of the file name.
+## How to Use
 
-If you want to select all files, type in `:a`.
+When the program menu appears, select groups by clicking on the grey arrow pointing down on the right side of the GUI, and then clicking the "Add Group" button.
 
-Once you have selected the group files you want for posting type in `:p` to begin posting.
+- To remove a group, select the group in the grey box by using the grey arrow on the right side of the GUI and clicking the "Remove Group" Button.
+- To select all groups, click the "Add All Groups" button.
+- To deselect all groups, click the "Remove All Groups" button.
+- To remove the image selected, click the "Remove Image" button.
+
+If you changed the group list files whle the program is running please click the button that says "Refresh Group File Selection List" to refresh the group files list and their contents in the program.
+
+Once you have selected the group files, and an image if you want to add an image to the post, click the button that says "Start Posting" at the bottom of the GUI to begin posting.
+
+Enjoy using MassFacebookGroupPoster to streamline your Facebook group postings!
