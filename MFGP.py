@@ -105,6 +105,17 @@ def postToGroups(postText, groups, imageFile, emailText, passwordText):
     password.send_keys(passwordText)
 
     WebDriverWait(browser, 10).until(expected_conditions.element_to_be_clickable((By.NAME, "login"))).click()
+
+    try:
+        element = WebDriverWait(browser, 10).until(expected_conditions.presence_of_element_located((By.ID, "checkpointSubmitButton")))
+        print(f"User is being asked for 2FA sign in code. Waiting until complete...")
+        print()
+        WebDriverWait(browser, 180).until(expected_conditions.invisibility_of_element_located((By.ID, "checkpointSubmitButton")))
+        print("User 2FA sign in complete, continuing.")
+        print()
+    except Exception as e:
+        pass
+
     waitPageLoad(browser, "x3ajldb")
 
     count = 0
